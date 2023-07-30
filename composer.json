@@ -24,6 +24,16 @@
     ],
     "license" : "MIT",
     "name" : "webservco/application-default",
+    "require": {
+        "php" : "^8.2",
+        "psr/log": "^3",
+        "webservco/application": "^0",
+        "webservco/configuration": "^0",
+        "webservco/dependency-container": "^0",
+        "webservco/error": "^0",
+        "webservco/http": "^0",
+        "webservco/stopwatch": "^0"
+    },
     "require-dev": {
         "pds/skeleton": "^1",
         "phan/phan": "^5",
@@ -40,16 +50,6 @@
         "vimeo/psalm": "^5",
         "webservco/coding-standards": "^0",
         "webservco/component-common": "^0"
-    },
-    "require": {
-        "php" : "^8.2",
-        "psr/log": "^3",
-        "webservco/application": "^0",
-        "webservco/configuration": "^0",
-        "webservco/dependency-container": "^0",
-        "webservco/error": "^0",
-        "webservco/http": "^0",
-        "webservco/stopwatch": "^0"
     },
     "scripts": {
         "check:lint": "vendor/bin/parallel-lint bin config public resources src tests",
