@@ -27,6 +27,20 @@ final class DefaultServerApplicationFactory
     }
 
     /**
+     * Create default server application using the common PHP data.
+     *
+     * A default wrapper for `createServerApplication`.
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function createDefaultServerApplication(LapTimerInterface $lapTimer): ApplicationInterface
+    {
+        // @phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
+        return $this->createServerApplication($lapTimer, $_COOKIE, $_POST, $_GET, $_SERVER, $_FILES);
+        // @phpcs:enable
+    }
+
+    /**
      * Following abomination needed in order to be contravariant with PSR method definitions.
      * @phpcs:disable SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint.DisallowedMixedTypeHint
      * @phpcs:disable SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax
