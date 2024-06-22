@@ -25,7 +25,7 @@
     "license" : "MIT",
     "name" : "webservco/application-default",
     "require": {
-        "php" : "^8.2",
+        "php" : "^8.3",
         "psr/log": "^3",
         "webservco/application": "^0",
         "webservco/configuration": "^0",
