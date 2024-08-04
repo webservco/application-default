@@ -10,10 +10,8 @@ use WebServCo\Application\Contract\ApplicationRunnerInterface;
 use WebServCo\Error\Contract\ErrorHandlingServiceInterface;
 use WebServCo\Stopwatch\Contract\LapTimerInterface;
 
-use function count;
 use function json_encode;
 use function register_shutdown_function;
-use function round;
 use function sprintf;
 
 use const JSON_THROW_ON_ERROR;
@@ -83,25 +81,15 @@ final class DefaultApplication implements ApplicationInterface
      */
     private function logLapTimerResult(): bool
     {
-        $laps = $this->lapTimer->getLaps();
-        $data = [
-            'lapTimer' => [
-                'laps' => [],
-                'totalLaps' => count($laps),
-                'totalTime' => $this->toMilliseconds($this->lapTimer->getTotalTime()),
-            ],
-        ];
-        foreach ($laps as $lapName => $lapTime) {
-            $data['lapTimer']['laps'][$lapName] = $this->toMilliseconds($lapTime);
-        }
-
-        $this->logger->debug(json_encode($data, JSON_THROW_ON_ERROR));
+        $this->logger->debug(
+            json_encode(
+                [
+                    'lapTimer' => $this->lapTimer->getStatistics(),
+                ],
+                JSON_THROW_ON_ERROR,
+            ),
+        );
 
         return true;
-    }
-
-    private function toMilliseconds(int $time, int $decimals = 6): float
-    {
-        return round($time / 1e+6, $decimals);
     }
 }
