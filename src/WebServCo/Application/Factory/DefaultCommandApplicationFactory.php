@@ -7,6 +7,7 @@ namespace WebServCo\Application\Factory;
 use WebServCo\Application\Contract\ApplicationInterface;
 use WebServCo\Application\Contract\ApplicationRunnerInterface;
 use WebServCo\Application\Service\DefaultApplication;
+use WebServCo\Command\Contract\CommandRunnerInterface;
 use WebServCo\DependencyContainer\Contract\ServiceContainerInterface;
 use WebServCo\Error\Contract\ErrorHandlingServiceFactoryInterface;
 use WebServCo\Stopwatch\Contract\LapTimerInterface;
@@ -21,7 +22,7 @@ final class DefaultCommandApplicationFactory
 
     public function createCommandApplication(
         LapTimerInterface $lapTimer,
-        ApplicationRunnerInterface $applicationRunner,
+        ApplicationRunnerInterface | CommandRunnerInterface $applicationRunner,
     ): ApplicationInterface {
         return new DefaultApplication(
             $applicationRunner,
