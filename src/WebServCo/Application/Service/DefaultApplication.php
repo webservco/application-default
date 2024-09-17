@@ -7,6 +7,7 @@ namespace WebServCo\Application\Service;
 use Psr\Log\LoggerInterface;
 use WebServCo\Application\Contract\ApplicationInterface;
 use WebServCo\Application\Contract\ApplicationRunnerInterface;
+use WebServCo\Command\Contract\CommandRunnerInterface;
 use WebServCo\Error\Contract\ErrorHandlingServiceInterface;
 use WebServCo\Stopwatch\Contract\LapTimerInterface;
 
@@ -29,7 +30,7 @@ use const JSON_THROW_ON_ERROR;
 final class DefaultApplication implements ApplicationInterface
 {
     public function __construct(
-        private ApplicationRunnerInterface $applicationRunner,
+        private ApplicationRunnerInterface | CommandRunnerInterface $applicationRunner,
         private ErrorHandlingServiceInterface $errorHandlingService,
         private LoggerInterface $logger,
         private LapTimerInterface $lapTimer,

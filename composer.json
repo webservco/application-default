@@ -29,6 +29,7 @@
         "psr/log": "^3",
         "webservco/application": "^0",
         "webservco/configuration": "^0",
+        "webservco/command": "^0",
         "webservco/dependency-container": "^0",
         "webservco/error": "^0",
         "webservco/http": "^0",
