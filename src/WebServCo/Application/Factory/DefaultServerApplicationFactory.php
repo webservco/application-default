@@ -31,7 +31,7 @@ final class DefaultServerApplicationFactory
      *
      * A default wrapper for `createServerApplication`.
      *
-     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings("PHPMD.Superglobals")
      */
     public function createDefaultServerApplication(LapTimerInterface $lapTimer): ApplicationInterface
     {
