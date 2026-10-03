@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WebServCo\Application\Service;
 
+use Override;
 use Psr\Log\LoggerInterface;
 use WebServCo\Application\Contract\ApplicationInterface;
 use WebServCo\Application\Contract\ApplicationRunnerInterface;
@@ -37,6 +38,7 @@ final class DefaultApplication implements ApplicationInterface
     ) {
     }
 
+    #[Override]
     public function bootstrap(): bool
     {
         $this->lapTimer->lap(sprintf('%s: start', __FUNCTION__));
@@ -53,6 +55,7 @@ final class DefaultApplication implements ApplicationInterface
         return $this->lapTimer->lap(sprintf('%s: end', __FUNCTION__));
     }
 
+    #[Override]
     public function run(): bool
     {
         $this->lapTimer->lap(sprintf('%s: start', __FUNCTION__));
@@ -62,6 +65,7 @@ final class DefaultApplication implements ApplicationInterface
         return $this->lapTimer->lap(sprintf('%s: end', __FUNCTION__));
     }
 
+    #[Override]
     public function shutdown(): bool
     {
         $this->errorHandlingService->restore();
