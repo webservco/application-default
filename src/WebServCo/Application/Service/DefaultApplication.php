@@ -77,12 +77,6 @@ final class DefaultApplication implements ApplicationInterface
 
     /**
      * Log lap timer results.
-     *
-     * json_encode: Despite using JSON_THROW_ON_ERROR flag, Phan 5.4.1 throws PhanPossiblyFalseTypeArgument.
-     * If adding is_string check, PHPStan and Psalm instead throw error.
-     * Test: @see `Tests\Misc\Phan\PhanPossiblyFalseTypeArgumentTest`
-     *
-     * @suppress PhanPossiblyFalseTypeArgument
      */
     private function logLapTimerResult(): bool
     {
