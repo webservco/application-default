@@ -27,13 +27,13 @@
     "require": {
         "php" : "^8.4",
         "psr/log": "^3",
-        "webservco/application": "^1",
-        "webservco/configuration": "^1",
-        "webservco/command": "^1",
-        "webservco/dependency-container": "^1",
-        "webservco/error": "^1",
-        "webservco/http": "^1",
-        "webservco/stopwatch": "^1"
+        "webservco/application": "^2",
+        "webservco/configuration": "^2",
+        "webservco/command": "^2",
+        "webservco/dependency-container": "^2",
+        "webservco/error": "^2",
+        "webservco/http": "^2",
+        "webservco/stopwatch": "^2"
     },
     "require-dev": {
         "pds/skeleton": "^1",
