@@ -20,7 +20,7 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
-    "description" : "A PHP component/library.",
+    "description" : "A PHP component/library. Default application implementation, with factories for web and command line applications.",
     "homepage" : "https://webserv.co",
     "keywords" : [
         "component",
