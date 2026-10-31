@@ -60,7 +60,8 @@ $applicationFactory = new DefaultCommandApplicationFactory(
 // $command: \WebServCo\Command\Contract\CommandRunnerInterface
 $application = $applicationFactory->createCommandApplication($lapTimer, $command);
 $application->bootstrap();
-$application->run();
+// `run()` returns the command's result. The script sets the exit code, because the application also serves web requests.
+exit($application->run() ? 0 : 1);
 ```
 
 ---
@@ -93,6 +94,8 @@ ALLOWED_HOSTS[] = localhost
 ## Notes
 
 `bootstrap()` installs the error handler (with the default factory, any PHP error becomes an `ErrorException`), registers `shutdown()` as a shutdown function, and then throws for errors that happened before the script started, such as a POST body over `post_max_size`. Install the exception handler before calling it.
+
+`run()` returns what the runner returned: the command's result, or for a server application whether the response was emitted.
 
 `shutdown()` restores the previous error handler and writes the lap timer statistics as JSON to the `application` log channel at debug level.
 

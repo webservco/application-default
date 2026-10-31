@@ -60,9 +60,11 @@ final class DefaultApplication implements ApplicationInterface
     {
         $this->lapTimer->lap(sprintf('%s: start', __FUNCTION__));
 
-        $this->applicationRunner->run();
+        $result = $this->applicationRunner->run();
 
-        return $this->lapTimer->lap(sprintf('%s: end', __FUNCTION__));
+        $this->lapTimer->lap(sprintf('%s: end', __FUNCTION__));
+
+        return $result;
     }
 
     #[Override]
