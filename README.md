@@ -5,7 +5,7 @@ A PHP component/library. Please see [webservco/sandbox](https://webservco.github
 Default application implementation, with factories for web and command line applications.
 
 - Requires: `ALLOWED_HOSTS` in the configuration (server application only)
-- Related: `webservco/application` (interfaces), `webservco/application-runner` (HTTP runner), `webservco/dependency-container` (provides the logger and configuration)
+- Related: `webservco/application` (interfaces), `webservco/application-runner` (HTTP runner), `webservco/dependency-container` (provides the logger and configuration), `webservco/exception` (the uncaught exception handler that `DefaultApplicationInitializer` sets)
 
 ---
 
@@ -19,9 +19,64 @@ composer require webservco/application-default
 
 ## Usage
 
+### Runner script of a command
+
+The whole script, for example `bin/Example.php`. `DefaultApplicationInitializer` does the start that is the same for every script: the project path (made absolute, with the trailing separator), the lap timer (started at `$startTime`, with the lap `autoload`), the application dependency container, the logger of the channel `application`, the configuration file `config/.env.ini`, the uncaught exception handler, and the lap `initialization`.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Project;
+
+use Project\Factory\Command\ExampleCommandFactory;
+use Throwable;
+use WebServCo\Application\Factory\DefaultCommandApplicationFactory;
+use WebServCo\Application\Service\DefaultApplicationInitializer;
+use WebServCo\Error\Factory\DefaultErrorHandlingServiceFactory;
+
+use function hrtime;
+
+// Initialize the start time as early as possible.
+$startTime = (int) hrtime(true);
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+try {
+    // \WebServCo\DependencyContainer\Contract\ApplicationDependencyContainerInterface
+    $applicationDependencyContainer = (new DefaultApplicationInitializer())->initialize(__DIR__ . '/..', $startTime);
+} catch (Throwable) {
+    // The initializer has logged the problem.
+    echo 'Initialization exception.';
+    exit(1);
+}
+
+$commandFactory = new ExampleCommandFactory($applicationDependencyContainer);
+
+$applicationFactory = new DefaultCommandApplicationFactory(
+    new DefaultErrorHandlingServiceFactory(),
+    $applicationDependencyContainer->getServiceContainer(),
+);
+$application = $applicationFactory->createDefaultCommandApplication($commandFactory->createCommand());
+$application->bootstrap();
+// No need to call `$application->shutdown();` it is registered as shutdown function.
+exit($application->run() ? 0 : 1);
+```
+
+The initializer prints nothing and does not end the script. When something fails (for example the project path, `config/.env.ini` or `var/log/` is missing), it logs the problem as `emergency` and throws it again. The script prints `Initialization exception.` and ends with the exit code 1. Until the logger of the channel `application` exists, the problem is logged to a `NullLogger`, so a missing `var/log/` is not logged anywhere.
+
+The configuration value `PROJECT_PATH` is the absolute project path, with the trailing separator. A script that needs the path reads it from there.
+
+To change the defaults, pass them to the constructor: the logger channel, the configuration directory (relative to the project path) and the configuration file.
+
+```php
+$initializer = new DefaultApplicationInitializer('application', 'config', '.env.ini');
+```
+
 ### Server application
 
-Example of what `public/index.php` does in the `webservco/sandbox` project, after it has created the dependency container and loaded the configuration.
+Example of what `public/index.php` does in the `webservco/sandbox` project, after `DefaultApplicationInitializer` (see above).
 
 ```php
 use WebServCo\Application\Factory\ApplicationRunnerFactory;
@@ -41,7 +96,8 @@ $applicationFactory = new DefaultServerApplicationFactory(
 );
 
 // \WebServCo\Application\Contract\ApplicationInterface
-$application = $applicationFactory->createDefaultServerApplication($lapTimer);
+// Without a lap timer, it uses the lap timer of the service container.
+$application = $applicationFactory->createDefaultServerApplication();
 $application->bootstrap();
 $application->run();
 ```
@@ -58,7 +114,8 @@ $applicationFactory = new DefaultCommandApplicationFactory(
 );
 
 // $command: \WebServCo\Command\Contract\CommandRunnerInterface
-$application = $applicationFactory->createCommandApplication($lapTimer, $command);
+// Uses the lap timer of the service container. For another lap timer: `createCommandApplication($lapTimer, $command)`.
+$application = $applicationFactory->createDefaultCommandApplication($command);
 $application->bootstrap();
 // `run()` returns the command's result. The script sets the exit code, because the application also serves web requests.
 exit($application->run() ? 0 : 1);
@@ -73,6 +130,7 @@ exit($application->run() ? 0 : 1);
 | `Contract\ApplicationInterface` (`webservco/application`) | `Service\DefaultApplication` | Sets up error handling, runs the runner and logs timing at shutdown. |
 | | `Factory\DefaultServerApplicationFactory` | Builds the server request from PHP globals and creates the application. |
 | | `Factory\DefaultCommandApplicationFactory` | Creates the application around a command. |
+| | `Service\DefaultApplicationInitializer` | Does the start of a runner script: project path, lap timer, application dependency container, logger, configuration, uncaught exception handler. |
 
 Namespaces are relative to `WebServCo\Application\`.
 

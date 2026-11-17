@@ -36,6 +36,7 @@
         "webservco/command": "^2",
         "webservco/dependency-container": "^2",
         "webservco/error": "^2",
+        "webservco/exception": "^2",
         "webservco/http": "^2",
         "webservco/stopwatch": "^2"
     },

@@ -20,6 +20,17 @@ final class DefaultCommandApplicationFactory
     ) {
     }
 
+    /**
+     * Create default command application using the lap timer of the service container.
+     *
+     * A default wrapper for `createCommandApplication`.
+     */
+    public function createDefaultCommandApplication(
+        ApplicationRunnerInterface | CommandRunnerInterface $applicationRunner,
+    ): ApplicationInterface {
+        return $this->createCommandApplication($this->serviceContainer->getLapTimer(), $applicationRunner);
+    }
+
     public function createCommandApplication(
         LapTimerInterface $lapTimer,
         ApplicationRunnerInterface | CommandRunnerInterface $applicationRunner,

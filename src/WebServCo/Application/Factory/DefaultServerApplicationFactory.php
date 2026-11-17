@@ -31,12 +31,20 @@ final class DefaultServerApplicationFactory
      *
      * A default wrapper for `createServerApplication`.
      *
+     * @param ?\WebServCo\Stopwatch\Contract\LapTimerInterface $lapTimer `null`: the lap timer of the service container
      * @SuppressWarnings("PHPMD.Superglobals")
      */
-    public function createDefaultServerApplication(LapTimerInterface $lapTimer): ApplicationInterface
+    public function createDefaultServerApplication(?LapTimerInterface $lapTimer = null): ApplicationInterface
     {
         // @phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
-        return $this->createServerApplication($lapTimer, $_COOKIE, $_POST, $_GET, $_SERVER, $_FILES);
+        return $this->createServerApplication(
+            $lapTimer ?? $this->serviceContainer->getLapTimer(),
+            $_COOKIE,
+            $_POST,
+            $_GET,
+            $_SERVER,
+            $_FILES,
+        );
         // @phpcs:enable
     }
 
